@@ -1,2 +1,23 @@
 # AuthAPI-Python
-This repository contains the API for authenticating the users in MaxiDrive.
+
+## Virtualenv
+
+```bash
+pip install virtualenv
+```
+
+```bash
+virtualenv venv
+```
+
+## Activate Virtualenv
+
+```bash
+source venv/Scripts/activate
+```
+
+## Dependency install
+
+```bash
+pip install flask flask-cors psycopg2 python-decouple python-dotenv
+```
