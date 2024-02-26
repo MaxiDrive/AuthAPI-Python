@@ -12,6 +12,9 @@ def page_not_found(error):
 if __name__ == '__main__':
     app.config.from_object(config['development'])
 
+    # Blueprints
+    app.register_blueprint(userRoutes.main,url_prefix='/api/users')
+
     # Erro handlers
     app.register_error_handler(404, page_not_found)
     app.run()
