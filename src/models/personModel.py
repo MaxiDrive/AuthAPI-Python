@@ -1,5 +1,5 @@
 from database.db import get_connection
-from .entities.person import person
+from .entities.person import Person
 
 
 class PersonModel():
@@ -15,7 +15,7 @@ class PersonModel():
                 result_set = cursor.fetchall()
 
                 for row in result_set:
-                    person = person(row[0], row[1], row[2], row[3])
+                    person = Person(row[0], row[1], row[2], row[3], row[4])
                     person_list.append(person.to_JSON())
 
             connection.close()

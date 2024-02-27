@@ -16,11 +16,12 @@ def get_users():
         return jsonify({'message': str(ex)}),500
     
 
+
 @main.route('/person')
 def get_person():
     try:
-        person = PersonModel.get_person()
-        return jsonify({person})
+        persons = PersonModel.get_person()
+        return jsonify(persons)
     except Exception as ex:
-        return jsonify({'message':str(ex)}); 500
+        return jsonify({'message':str(ex)}), 500
     

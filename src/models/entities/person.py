@@ -1,4 +1,4 @@
-class person():
+class Person():
     def __init__(self, Id_person, Name, Address, Mail, type_user_Id_type_user) -> None:
         self.Id_person=Id_person
         self.Name=Name
