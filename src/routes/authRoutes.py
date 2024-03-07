@@ -47,5 +47,15 @@ def login():
 @auth_blueprint.route('/protected', methods=['GET'])
 @jwt_required()
 def protected():
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
+    try:
+        current_user = get_jwt_identity()
+        user = UserModel.get_user_by_username(current_user['username'])
+
+        if user:
+            user_info = user.to_JSON()
+            return jsonify(user_info), 200
+        else:
+            return jsonify(message="Usuario no encontrado"), 404
+
+    except Exception as e:
+        return jsonify(error=str(e)), 500
