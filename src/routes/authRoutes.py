@@ -7,14 +7,21 @@ auth_blueprint = Blueprint('auth_blueprint', __name__)
 @auth_blueprint.route('/register', methods=['POST'])
 def register_user():
     data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
+    user_data = {
+        'Name': data.get('name'),
+        'Address': data.get('address'),
+        'Mail': data.get('mail'),
+        'UserName': data.get('username'),
+        'Password': data.get('password'),
+        'Age': data.get('age'),
+        'Img': data.get('img')
+    }
 
-    if not username or not password:
-        return jsonify({'message': 'Falta nombre de usuario o contraseña'}), 400
+    if not all(user_data.values()):
+        return jsonify({'message': 'Faltan datos obligatorios'}), 400
 
     try:
-        UserModel.register_user(username, password)
+        UserModel.register_user(user_data)
         return jsonify({'message': 'Usuario registrado exitosamente'}), 201
 
     except Exception as ex:
@@ -32,7 +39,7 @@ def login():
     # Autenticación del usuario
     if UserModel.authenticate_user(username, password):
         # Crear token de acceso
-        access_token = create_access_token(identity={'username': username})
+        access_token = UserModel.get_access_token(username)
         return jsonify(access_token=access_token), 200
     else:
         return jsonify({'message': 'Credenciales incorrectas'}), 401
