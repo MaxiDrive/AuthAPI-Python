@@ -1,12 +1,16 @@
+import base64
+import os
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.usersModel import UserModel
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
 @auth_blueprint.route('/register', methods=['POST'])
 def register_user():
-    data = request.get_json()
+    data = request.form
+    img_file = request.files.get('img') if 'img' in request.files else None
+
     user_data = {
         'Name': data.get('name'),
         'Address': data.get('address'),
@@ -14,7 +18,7 @@ def register_user():
         'UserName': data.get('username'),
         'Password': data.get('password'),
         'Age': data.get('age'),
-        'Img': data.get('img')
+        'Img': img_file
     }
 
     if not all(user_data.values()):
@@ -36,9 +40,7 @@ def login():
     if not username or not password:
         return jsonify({'message': 'Falta nombre de usuario o contraseña'}), 400
 
-    # Autenticación del usuario
     if UserModel.authenticate_user(username, password):
-        # Crear token de acceso
         access_token = UserModel.get_access_token(username)
         return jsonify(access_token=access_token), 200
     else:
@@ -53,6 +55,14 @@ def protected():
 
         if user:
             user_info = user.to_JSON()
+
+            img_path = user_info.get('Img')
+            if img_path and os.path.exists(img_path):
+                with open(img_path, 'rb') as img_file:
+                    img_binary = img_file.read()
+                img_base64 = base64.b64encode(img_binary).decode('utf-8')
+                user_info['Img'] = img_base64
+
             return jsonify(user_info), 200
         else:
             return jsonify(message="Usuario no encontrado"), 404
