@@ -6,8 +6,9 @@ from database.db import get_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.entities.users import Users
 from werkzeug.utils import secure_filename
+from decouple import config
 
-UPLOAD_FOLDER = "C:\imgPruebas"  # Asegúrate de usar barras diagonales hacia adelante para la ruta
+UPLOAD_FOLDER = config('UPLOAD_ROUTE')
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
